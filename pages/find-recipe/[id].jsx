@@ -33,6 +33,8 @@ function Detail() {
 
 			let intructions = data.strInstructions
 				.split('.')
+				//반환된 문자배열중에서 숫자가 포함되어 있는 배열을 제외
+				//.filter((text) => !/\d/.test(text))
 				.map((text) => text.trim().replace('\r\n', '').trim() + '.')
 				.filter((text) => text !== '.');
 			setListData(intructions);
@@ -59,7 +61,7 @@ function Detail() {
 						<Pic imgSrc={data.strMealThumb} />
 					</div>
 					<Table data={TableData} title={data.strMeal} />
-					<List data={ListData} tag={'ol'} />
+					<List data={ListData} url={Array(14).fill('a')} tag={'ol'} />
 				</>
 			)}
 		</section>
