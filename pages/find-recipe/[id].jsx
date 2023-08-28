@@ -6,12 +6,14 @@ import clsx from 'clsx';
 import { BounceLoader } from 'react-spinners';
 import { Table } from '@/components/atoms/Table/Table';
 import { useState, useEffect } from 'react';
+import List from '@/components/atoms/List/List';
 
 function Detail() {
 	const router = useRouter();
 	const { id } = router.query;
 	const { data } = useRecipeById(id);
 	const [TableData, setTableData] = useState([]);
+	const [ListData, setListData] = useState([]);
 
 	//무한루프에 빠지지 않게 하기위해서 해당 해당 컴포넌트에서 data가 받아졌을떄 한번한 호출해서 State에 옮겨담기
 	useEffect(() => {
@@ -28,6 +30,12 @@ function Detail() {
 				measuer: data[`strMeasure${idx + 1}`],
 			}));
 			setTableData(ingredients);
+
+			let intructions = data.strInstructions
+				.split('.')
+				.map((text) => text.trim().replace('\r\n', '').trim() + '.')
+				.filter((text) => text !== '.');
+			setListData(intructions);
 		}
 	}, [data]);
 
@@ -51,6 +59,7 @@ function Detail() {
 						<Pic imgSrc={data.strMealThumb} />
 					</div>
 					<Table data={TableData} title={data.strMeal} />
+					<List data={ListData} tag={'ol'} />
 				</>
 			)}
 		</section>
