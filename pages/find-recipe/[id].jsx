@@ -7,6 +7,9 @@ import { BounceLoader } from 'react-spinners';
 import { Table } from '@/components/atoms/Table/Table';
 import { useState, useEffect } from 'react';
 import List from '@/components/atoms/List/List';
+import Btn from '@/components/atoms/Button/Btn';
+import { color } from 'framer-motion';
+import styles from './detail.module.scss';
 
 function Detail() {
 	// const arr = ['red', 'green', 'blue']; //이 배열은 실상 객체
@@ -20,7 +23,43 @@ function Detail() {
 	const { data } = useRecipeById(id);
 	const [TableData, setTableData] = useState([]);
 	const [ListData, setListData] = useState([]);
+	const [Saved, setSaved] = useState(false);
 
+	//버튼을 클릭할때마다 해당 recipe를 저장, 삭제해주는 토글함수
+	const handleSave = () => {
+		const savedRecipe = JSON.parse(localStorage.getItem('savedRecipe'));
+
+		if (!Saved) {
+			savedRecipe.push(data.idMeal);
+			localStorage.setItem('savedRecipe', JSON.stringify(savedRecipe));
+			setSaved(true);
+		} else {
+			//배열.splice('자를요소의 순번', '갯수')
+			//해당페이지의 레시피 아이디값의 배열의 순번을 구한다음 해당 순번의 배열값 하나만 제거
+			savedRecipe.splice(savedRecipe.indexOf(data.idMeal), 1);
+			localStorage.setItem('savedRecipe', JSON.stringify(savedRecipe));
+			setSaved(false);
+		}
+	};
+
+	//라우터로 들어오는 id값이 변경될때마다 실행되는 useEffect
+	useEffect(() => {
+		//로컬저장소에 저장된 recipeId값이 있으면
+		if (localStorage.getItem('savedRecipe')) {
+			//해당데이터를 배열로 파싱해서 가져옴
+			const savedRecipe = JSON.parse(localStorage.getItem('savedRecipe'));
+			//가져온 배열값에서 router들어온 id값이 있는지 확인
+			if (savedRecipe.includes(id)) {
+				setSaved(true);
+				//로털저장소에 값은 있지만 현재 라우터로 받은 레시피 정보값은 없는 경우
+			} else {
+				setSaved(false);
+			}
+			//아예 로컬저장소 자체가 없으면 그냥 빈배열값으로 저장소 생성
+		} else {
+			localStorage.setItem('savedRecipe', JSON.stringify([]));
+		}
+	}, [id]);
 	//무한루프에 빠지지 않게 하기위해서 해당 해당 컴포넌트에서 data가 받아졌을떄 한번한 호출해서 State에 옮겨담기
 	useEffect(() => {
 		if (data) {
@@ -52,8 +91,12 @@ function Detail() {
 	}, [data]);
 
 	return (
-		<section className='detail'>
+		<section className={clsx(styles.detail)}>
 			<BounceLoader
+				//기본적으로 next는 라우터명이 변경될때마다 언마운트되는 페이지의 컴포넌트의 csr방식ㅇ으로 가져온 데이터와 스타일 노드를 제거
+				//page transition이 적용되어 있기 때문에 상세페이지에서 다른 페이지로 넘어갈때 데이터는 이미 사라졌음에도 불구하고 데이터를 활용하는 컴포넌트가 계속 있으면 prop오류 발생
+				//해결방법 : csr방식으로 가져오는 데이터 자체를 컴포넌트 랜더링의 조건설정
+				//데이터 없으면 로딩바 출력, 데이터가 있으면 그 데이터를 활용하는 컴포넌트 출력
 				loading={!data}
 				cssOverride={{ position: 'absolute', top: 300, left: '50%', transform: 'translateX(-50%)' }}
 				color={'orange'}
@@ -67,9 +110,13 @@ function Detail() {
 				<>
 					<Title type={'slogan'}>{data.strMeal}</Title>
 
-					<div className='picFrame'>
+					<div className={clsx(styles.picFrame)}>
 						<Pic imgSrc={data.strMealThumb} />
 					</div>
+					{/* 버튼 클릭시 Saved값이 true일떄만 모듈sass로 del 클래스명을 붙이고 해당 고유 클래스명은 atom컴포넌트로 상속됨 : 결과적으로 해당 클래스명의 스타일이 atom컴포넌트의 기본 style을 덮어쓰기 */}
+					<Btn onClick={handleSave} className={clsx(Saved && styles.del)}>
+						{!Saved ? 'Add to My Favorait' : 'Remove to My Favorait'}
+					</Btn>
 					<Table data={TableData} title={data.strMeal} />
 					<List data={ListData} url={Array(14).fill('a')} tag={'ol'} />
 				</>
