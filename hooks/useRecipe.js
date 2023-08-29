@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueries } from '@tanstack/react-query';
 import axios from 'axios';
 
 const getRecipeByCategory = async ({ queryKey }) => {
@@ -48,3 +48,23 @@ export const useRecipeById = (DebounceId) => {
 		staleTime: 1000 * 60 * 60 * 24,
 	});
 };
+
+export const useRecipesByIds = (arr) => {
+	//배열값을 인수로 받아서 반복을 돌면서 쿼리키와 api함수를 객체별 배열로 묶어 리턴
+	const queries = arr.map((id) => ({
+		queryKey: ['RecipeById', id],
+		queryFn: getRecipeById,
+		refetchOnMount: false,
+		refetchOnWindowFocus: false,
+		cacheTime: 1000 * 60 * 60 * 24,
+		staleTime: 1000 * 60 * 60 * 24,
+	}));
+	console.log(queries);
+
+	//useQueries : 복수개의 useQuery를 병렬식으로 동시에 작업 실행
+	//사용방법: useQueries([useQuery, useQuery, useQuery])
+	return useQueries({ queries });
+	//console.log(result);
+};
+
+//

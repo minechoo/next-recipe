@@ -10,6 +10,7 @@ import List from '@/components/atoms/List/List';
 import Btn from '@/components/atoms/Button/Btn';
 import { color } from 'framer-motion';
 import styles from './detail.module.scss';
+import { Text } from '@/components/atoms/text/Text';
 
 function Detail() {
 	// const arr = ['red', 'green', 'blue']; //이 배열은 실상 객체
@@ -117,6 +118,7 @@ function Detail() {
 					<Btn onClick={handleSave} className={clsx(Saved && styles.del)}>
 						{!Saved ? 'Add to My Favorait' : 'Remove to My Favorait'}
 					</Btn>
+					{Saved && <Text>You alredy added this recipe to your Favorait</Text>}
 					<Table data={TableData} title={data.strMeal} />
 					<List data={ListData} url={Array(14).fill('a')} tag={'ol'} />
 				</>
