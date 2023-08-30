@@ -13,7 +13,7 @@ function Favorait() {
 		if (localStorage.getItem('savedRecipe')) {
 			setSavedId(JSON.parse(localStorage.getItem('savedRecipe')));
 		} else {
-			JSON.stringify(localStorage.setItem('savedRecipe', []));
+			localStorage.setItem('savedRecipe', JSON.stringify([]));
 		}
 	}, []);
 

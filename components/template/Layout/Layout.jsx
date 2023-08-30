@@ -3,8 +3,23 @@ import Header from '../../organisms/Header/Header';
 import styles from './Layout.module.scss';
 import clsx from 'clsx';
 import Footer from '@/components/organisms/Footer/Footer';
+import { useRouter } from 'next/router';
+import { useState, useEffect } from 'react';
+import Breadcrumbs from '@/components/molecules/Breadcrumbs/Breadcrumbs';
 
 function Layout({ children }) {
+	const router = useRouter();
+	//console.log(router)
+	//console.log(router.asPath);
+	const [Path, setPath] = useState([]);
+	useEffect(() => {
+		const arr = router.asPath.split('/');
+		arr[0] = 'Home';
+		setPath(arr);
+
+		console.log(arr);
+	}, [router]);
+
 	return (
 		<>
 			<Head>
@@ -14,7 +29,11 @@ function Layout({ children }) {
 			</Head>
 			<main className={clsx(styles.layout)}>
 				<Header />
-				<section className={clsx(styles.content)}>{children}</section>
+
+				<section className={clsx(styles.content)}>
+					<Breadcrumbs data={Path} />
+					{children}
+				</section>
 				<Footer />
 			</main>
 		</>
