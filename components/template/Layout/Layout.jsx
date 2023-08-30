@@ -6,16 +6,24 @@ import Footer from '@/components/organisms/Footer/Footer';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import Breadcrumbs from '@/components/molecules/Breadcrumbs/Breadcrumbs';
+import { flushSync } from 'react-dom';
 
 function Layout({ children }) {
 	const router = useRouter();
 	console.log(router);
 	//console.log(router.asPath);
 	const [Path, setPath] = useState([]);
+	const [IsShow, setIsShow] = useState(true);
+	const [IsMain, setIsMain] = useState(true);
+
 	useEffect(() => {
 		const arr = router.asPath.split('/');
 		setPath(arr);
-
+		//라우터 경로가 바뀔때마다 순간적으로 IsShow값을 flase로 바꿨다가
+		setIsShow(false);
+		setIsMain(router.asPath === '/');
+		//페이지전환모션이 끝나는 0.5초 뒤에 다시 true로 변경
+		setTimeout(() => setIsShow(true), 500);
 		console.log(arr);
 	}, [router]);
 
@@ -30,7 +38,8 @@ function Layout({ children }) {
 				<Header />
 
 				<section className={clsx(styles.content)}>
-					<Breadcrumbs data={Path} />
+					{/* 해당 브레드크럼의 활성화 유무을 IsShow 값으로 연동 */}
+					<Breadcrumbs data={Path} isActive={IsShow && !IsMain} />
 					{children}
 				</section>
 				<Footer />

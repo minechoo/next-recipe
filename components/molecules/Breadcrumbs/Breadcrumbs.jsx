@@ -3,9 +3,9 @@ import styles from './Breadcrumbs.module.scss';
 import clsx from 'clsx';
 import React from 'react';
 
-function Breadcrumbs({ data }) {
+function Breadcrumbs({ data, isActive }) {
 	return (
-		<nav className={clsx(styles.breadcrumbs)}>
+		<nav className={clsx(styles.breadcrumbs, isActive ? styles.on : '')}>
 			{data.map((name, idx) => {
 				const result = name.includes('-')
 					? name
