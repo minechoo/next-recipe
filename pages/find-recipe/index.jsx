@@ -42,7 +42,12 @@ export default function Recipe({ categories }) {
 			</Head>
 
 			<section className={styles.recipePage}>
-				<Category items={categories} onClick={handleClickCategory} active={DebouncedSelected} className={clsx(styles.category)} />
+				<Category
+					items={categories}
+					onClick={handleClickCategory}
+					active={DebouncedSelected}
+					className={clsx(styles.category)}
+				/>
 
 				<article className={clsx(styles.titBox)}>
 					<Title type={'slogan'} className={clsx(styles.titCategory)} style={{ color: '#bbb', hoverColor: '#bbb' }}>
@@ -55,12 +60,24 @@ export default function Recipe({ categories }) {
 				<div className={clsx(styles.listFrame)}>
 					{isCategory &&
 						dataByCategory.map((el) => (
-							<Card key={el.idMeal} imgSrc={el.strMealThumb} url={`/find-recipe/${el.idMeal}`} txt={`${el.strMeal}`} className={clsx(styles.card)} />
+							<Card
+								key={el.idMeal}
+								imgSrc={el.strMealThumb}
+								url={`/find-recipe/${el.idMeal}?name=${el.strMeal}`}
+								txt={`${el.strMeal}`}
+								className={clsx(styles.card)}
+							/>
 						))}
 
 					{isSearch &&
 						dataBySearch.map((el) => (
-							<Card key={el.idMeal} imgSrc={el.strMealThumb} url={`/find-recipe/${el.idMeal}`} txt={`${el.strMeal}`} className={clsx(styles.card)} />
+							<Card
+								key={el.idMeal}
+								imgSrc={el.strMealThumb}
+								url={`/find-recipe/${el.idMeal}`}
+								txt={`${el.strMeal}`}
+								className={clsx(styles.card)}
+							/>
 						))}
 
 					{isSearch && dataBySearch.length === 0 && (

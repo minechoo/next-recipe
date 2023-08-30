@@ -9,12 +9,11 @@ import Breadcrumbs from '@/components/molecules/Breadcrumbs/Breadcrumbs';
 
 function Layout({ children }) {
 	const router = useRouter();
-	//console.log(router)
+	console.log(router);
 	//console.log(router.asPath);
 	const [Path, setPath] = useState([]);
 	useEffect(() => {
 		const arr = router.asPath.split('/');
-		arr[0] = 'Home';
 		setPath(arr);
 
 		console.log(arr);
