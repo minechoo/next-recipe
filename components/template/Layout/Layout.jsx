@@ -21,7 +21,7 @@ function Layout({ children }) {
 		setPath(arr);
 		//라우터 경로가 바뀔때마다 순간적으로 IsShow값을 flase로 바꿨다가
 		setIsShow(false);
-		setIsMain(router.asPath === '/');
+		setIsMain(router.asPath === '/'); //true
 		//페이지전환모션이 끝나는 0.5초 뒤에 다시 true로 변경
 		setTimeout(() => setIsShow(true), 500);
 		console.log(arr);
